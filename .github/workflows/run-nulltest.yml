@@ -4,15 +4,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-nulltest:
+  nulltest:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/gliccser/pqg:latest
 
     steps:
-      - name: Check Docker availability
-        run: docker --version
-
-      - name: Pull PQG Docker image
-        run: docker pull ghcr.io/gliccser/pqg:latest
-
       - name: Run null_test.py
-        run: docker run ghcr.io/gliccser/pqg:latest python3 null_test.py
+        run: python3 null_test.py
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: nulltest-results
+          path: summary_null.txt
