@@ -8,14 +8,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Login to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u gliccser --password-stdin
+      - uses: actions/checkout@v4
 
-      - name: Pull PQG Docker image
-        run: docker pull ghcr.io/gliccser/pqg:latest
+      - name: Install LVK stack
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r requirements_working.txt
 
       - name: Run null_test.py
-        run: docker run ghcr.io/gliccser/pqg:latest python3 null_test.py
+        run: python3 null_test.py
 
       - name: Upload results
         uses: actions/upload-artifact@v4
