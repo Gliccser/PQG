@@ -6,12 +6,16 @@ on:
 jobs:
   nulltest:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/gliccser/pqg:latest
 
     steps:
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u gliccser --password-stdin
+
+      - name: Pull PQG Docker image
+        run: docker pull ghcr.io/gliccser/pqg:latest
+
       - name: Run null_test.py
-        run: python3 null_test.py
+        run: docker run ghcr.io/gliccser/pqg:latest python3 null_test.py
 
       - name: Upload results
         uses: actions/upload-artifact@v4
