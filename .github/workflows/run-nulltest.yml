@@ -8,18 +8,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check Docker availability
+        run: docker --version
+
       - name: Pull PQG Docker image
         run: docker pull ghcr.io/gliccser/pqg:latest
 
-      - name: Run null_test.py with full stderr logging
-        run: |
-          docker run --rm -i \
-            -v ${{ github.workspace }}:/out \
-            ghcr.io/gliccser/pqg:latest \
-            /bin/bash -c "python3 null_test.py" 2>&1 | tee nulltest_log.txt
-
-      - name: Upload log
-        uses: actions/upload-artifact@v4
-        with:
-          name: nulltest-log
-          path: nulltest_log.txt
+      - name: Run null_test.py
+        run: docker run ghcr.io/gliccser/pqg:latest python3 null_test.py
